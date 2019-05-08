@@ -1,0 +1,31 @@
+@import "variables";
+
+@mixin desktop {
+    @media (min-width: 787px) {
+        @content;
+    }
+}
+
+@mixin panel {
+    background: $background-light;
+}
+
+@mixin fixed-width($width)
+{
+    width: $width;
+    min-width: $width;
+    max-width: $width;
+}
+
+@mixin fixed-height($height)
+{
+    height: $height;
+    min-height: $height;
+    max-height: $height;
+}
+
+@mixin fixed-size($size)
+{
+    @include fixed-width($size);
+    @include fixed-height($size);
+}

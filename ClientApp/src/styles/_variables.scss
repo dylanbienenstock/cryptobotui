@@ -1,0 +1,30 @@
+//* Fonts
+$font-sans: "Roboto", sans-serif;
+$font-mono: "Iosevka", monospace;
+$font-size: 14px;
+
+// * Global
+$color:            lighten(black, 80%);
+$background:       lighten(black, 14%);
+$background-light: lighten(black, 20%);
+$border:           lighten(black, 30%);
+
+$color-bullish: hsl(120, 100%, 74%);
+$color-bearish: hsl(0, 100%, 65%);
+
+// * UI Elements
+$button-height: 30px;
+$button-font-size: $font-size;
+$button-background-hover: rgba(white, 0.1);
+$button-background-active: rgba(white, 0.13);
+
+$icon-button-size: 58px;
+$icon-button-icon-size: 24px;
+
+
+// * Sidebar
+$sidebar-width: $icon-button-size;
+$sidebar-background: lighten($background, 5%);
+
+// * Navbar
+$navbar-background: lighten($background, 8%);

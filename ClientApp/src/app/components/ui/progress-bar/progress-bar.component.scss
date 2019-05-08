@@ -1,0 +1,96 @@
+@import "mixins";
+@import "variables";
+
+:host {
+    display: block;
+    position: relative;
+    height: 48px;
+    background: $background;
+
+    @include desktop {
+        &:hover {
+            .overlay:not(.loading) {
+                background: $button-background-hover;
+            }
+        }
+
+        &:active {
+            .overlay:not(.loading) {
+                background: $button-background-active;
+            }
+        }
+    }
+
+    .overlay,
+    .bar {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+    }
+
+    .overlay {
+        z-index: 1;
+
+        &:not(.loading) {
+            cursor: pointer;
+        }
+        
+        &.loading {
+            background-color: rgba(white, 0.2);
+        }
+    }
+
+    .bar {
+        opacity: 0.5;
+        transition: opacity 250ms ease;
+
+        @keyframes progress-bar-appear {
+            from { width: 0%;  }
+            to   { width: 100% }
+        }
+
+        animation: progress-bar-appear 400ms ease forwards;
+
+        &.flash {
+            opacity: 0.8;
+        }
+
+        &:not(.working) {
+            .indicator {
+                display: none;
+            }
+        }
+
+        > * {
+            position: absolute;
+            height: 100%;
+        }
+
+        .progress {
+            min-width: 2px;
+
+            background: red;
+            transition: width 450ms ease,
+                        background 450ms ease;
+        }
+
+        .indicator {
+            width: 100%;
+            border-width: 2px;
+            border-style: solid;
+            border-color: red;
+            box-sizing: border-box;
+
+            transition: border-color 450ms ease,
+                        background 450ms ease;
+        }
+    }
+
+    .text {
+        display: inline-block;
+        position: relative;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}

@@ -1,0 +1,17 @@
+@import "variables";
+@import "functions";
+@import "mixins";
+
+:host {
+    display: block;
+    width: 100%;
+    padding-left: $sidebar-width;
+    box-sizing: border-box;
+
+    background: $navbar-background;
+
+    .icon {
+        display: inline-block;
+        width: $sidebar-width;
+    }
+}

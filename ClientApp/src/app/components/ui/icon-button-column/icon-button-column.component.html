@@ -1,0 +1,6 @@
+<app-icon-button *ngFor="let button of markup.buttons" [markup]="{
+  page:   button.page,
+  text:   button.text,
+  icon:   button.icon,
+  inline: false
+}"></app-icon-button>

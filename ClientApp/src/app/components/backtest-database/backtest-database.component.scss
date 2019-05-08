@@ -1,0 +1,107 @@
+@import "variables";
+@import "mixins";
+
+:host {
+    display: block;
+    font-family: $font-sans;
+
+    text-align: left;
+    line-height: 2;
+
+    box-sizing: border-box;
+    padding: 64px;
+
+    .exchange {
+        @include panel;
+
+        &.flash {
+            .completion-status.collecting {
+                opacity: 0.8 !important;
+            }
+        }
+
+        .completion {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-gap: 16px;
+            padding: 16px;
+    
+            .pair {
+                cursor: pointer;
+
+                position: relative;
+                height: 48px;
+                background: $background;
+
+                @include desktop {
+                    &:hover {
+                        .pointer-effect {
+                            background: $button-background-hover;
+                        }
+                    }
+
+                    &:active {
+                        .pointer-effect {
+                            background: $button-background-active;
+                        }
+                    }
+                }
+
+                .pointer-effect,
+                .completion-status {
+                    position: absolute;
+                    height: 100%;
+                    width: 100%;
+                }
+
+                .pointer-effect {
+                    z-index: 1;
+                }
+
+                .completion-status {
+                    opacity: 0.5;
+
+                    transition: opacity 250ms ease;
+
+                    &:not(.collecting) {
+                        .indicator {
+                            display: none;
+                        }
+                    }
+
+                    > * {
+                        position: absolute;
+                        height: 100%;
+                    }
+
+                    .progress {
+                        min-width: 2px;
+
+                        background: red;
+                        transition: width 450ms ease,
+                                    background 450ms ease;
+                    }
+
+                    .indicator {
+                        width: 100%;
+                        border-width: 2px;
+                        border-style: solid;
+                        border-color: red;
+                        box-sizing: border-box;
+
+                        transition: border-color 450ms ease,
+                                    background 450ms ease;
+                    }
+                }
+
+                .text {
+                    display: inline-block;
+                    position: relative;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                }
+            }
+        }
+    }
+}

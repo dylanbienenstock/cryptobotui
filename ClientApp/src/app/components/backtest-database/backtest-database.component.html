@@ -1,0 +1,17 @@
+<div class="exchange"
+[class.flash]="flash"
+*ngFor="let exchangeSnapshot of exchangeNetwork?.networkSnapshot?.exchangeSnapshots">
+    <div class="completion">
+        <div class="pair"
+        *ngFor="let marketRef of exchangeSnapshot.marketRefs"
+        (click)="toggleCollecting(exchangeSnapshot.name, marketRef.symbol)">
+            <app-progress-bar
+            [empty]   ="exchangeNetwork.backtestDataCompletion[marketRef.key]?.completeDays <= 1"
+            [loading] ="exchangeNetwork.backtestDataCompletion[marketRef.key] == null"
+            [working] ="exchangeNetwork.collectingBacktestData[marketRef.key]"
+            [progress]="exchangeNetwork.backtestDataCompletion[marketRef.key]?.ratio">
+                <app-pair [symbol]="marketRef.symbol"></app-pair>
+            </app-progress-bar>
+        </div>
+    </div>
+</div>

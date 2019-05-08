@@ -1,0 +1,59 @@
+@import "variables";
+@import "mixins";
+
+.container {
+    @include fixed-size($icon-button-size);
+
+    cursor: pointer;
+
+    display: block;
+    padding: 0 8px;
+    box-sizing: border-box;
+    font-size: 0;
+
+    outline: 0;
+
+    &.active {
+        background: $button-background-active;
+    }
+
+    @include desktop {
+        &:not(:hover):not(.active) {
+            .icon {
+                filter: brightness(70%);
+            }
+        }
+
+        &:hover:not(.active) {
+            .icon {
+                filter: brightness(100%);
+            }
+        }
+
+        &:active, &.active {
+            .icon {
+                filter: brightness(130%) !important;
+            }  
+        }
+    }
+
+    &.inline {
+        display: inline-block;
+        box-sizing: content-box;
+    }
+
+    .container-inner {
+        display: inline-block;
+        
+        position: relative;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        filter: drop-shadow(0 0 4px rgba(black, 0.6));
+
+        .icon {
+            @include fixed-size($icon-button-icon-size);
+        }
+    }
+}

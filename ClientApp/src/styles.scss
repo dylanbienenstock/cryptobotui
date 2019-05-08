@@ -1,0 +1,41 @@
+@import "variables";
+@import "functions";
+
+@import url("https://fonts.googleapis.com/css?family=Roboto:300,400");
+
+@font-face {
+    font-family: "Iosevka";
+    src: url("assets/Iosevka.woff2") format("woff2"),
+        url("assets/Iosevka.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+
+    font-family: $font-sans;
+    // font-weight: 300;
+    font-size: 14px;
+    background: $background;
+
+    border: border();
+    box-sizing: border-box;
+
+    $width: calc(100vw - 1px);
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+
+    $height: calc(100vh - 1px);
+    height: $height;
+    min-height: $height;
+    max-height: $height;
+
+    color: $color;
+}
+
+*:not(.selectable) {
+    user-select: none;
+}

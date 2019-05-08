@@ -1,0 +1,32 @@
+@import "variables";
+
+:host {
+    display: grid;
+    height: 100%;
+    
+    grid-template-columns: $sidebar-width auto;
+    grid-template-rows: $button-height auto $button-height;
+    grid-template-areas: 
+        "navbar  navbar"
+        "sidebar content"
+        "status  status";
+
+    app-navbar {
+        grid-area: navbar;
+    }
+
+    app-sidebar {
+        grid-area: sidebar;
+    }
+
+    app-statusbar {
+        grid-area: status;
+    }
+
+    .content {
+        grid-area: content;
+
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+}

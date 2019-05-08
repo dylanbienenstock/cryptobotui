@@ -1,0 +1,15 @@
+@import "variables";
+
+:host {
+    font-weight: bold;
+
+    text-shadow: 0 0 5px black;
+
+    .base {
+        color: $color;
+    }
+
+    .quote {
+        opacity: rgba($color, 0.6);
+    }
+}

@@ -1,0 +1,5 @@
+@import "variables";
+
+@function border() {
+    @return unquote("0.5px solid #{$border}");
+}

@@ -1,0 +1,27 @@
+<div class="overlay" [class.loading]="loading"></div>
+<ng-container *ngIf="!loading">
+    <div class="bar"
+    [class.working]="working"
+    [class.flash]="working && _interface.flash">
+        <ng-container *ngIf="!empty; else emptyBar">
+            <div class="progress"
+            [style.width.%]="progress * 100"
+            [style.background]="'hsl(' + (progress * 128) + ', 100%, 50%)'">
+            </div>
+    
+            <div class="indicator"
+            [style.border-color]="'hsl(' + (progress * 128) + ', 100%, 50%)'">
+            </div>
+        </ng-container>
+    
+        <ng-template #emptyBar>
+            <div class="progress"></div>
+            <div class="indicator"></div>
+        </ng-template>
+    </div>
+    
+    <div class="text">
+        <ng-content></ng-content>
+    </div>
+</ng-container>
+<!-- <img *ngIf="loading" class="loading" src="assets/loading.svg"> -->

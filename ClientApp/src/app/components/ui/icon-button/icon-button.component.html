@@ -1,0 +1,9 @@
+<div class="container" *ngIf="markup"
+[class.inline]="markup.inline"
+[class.active]="markup.page && currentPage == markup.page"
+[routerLink]  ="markup.page ? [pageRoutes[markup.page]] : undefined">
+    <div class="container-inner">
+        <div>{{currentPage}} | {{markup.page}}</div>
+        <img class="icon" [src]="'assets/icons/' + markup.icon + '.svg'">
+    </div>
+</div>
