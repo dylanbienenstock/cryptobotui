@@ -1,0 +1,31 @@
+<div class="container" #container 
+[style.transform]="'translateY(' + scroll + 'px)'"
+[style.transition]="(scrollReady && autoScroll) ? 'transform 1s ease-in-out' : ''">
+    <div class="list" [style.min-height.px]="listHeight">
+        <div class="depth ask" *ngFor="let order of orderbook.asks; trackBy: trackByFn">
+            <div class="market-share" [style.width.%]="wallSize(order, 'ask')"></div>
+            <span class="price">{{ order.price | number: '1.8' }}</span>
+            <span class="amount">{{ order.amount | number:'1.0-4' }}</span>
+            <span class="btc-equivalent">
+                <!-- <span class="cf cf-btc"></span> -->
+                {{ order.price * order.amount | number:'1.1' }}
+            </span>
+        </div>
+    </div>
+
+    <div class="spread">
+        Spread: {{ (orderbook.asks[orderbook.asks.length - 1]?.price / orderbook.bids[0]?.price - 1) * 100 | number:'1.2' }}%
+    </div>
+
+    <div class="list" [style.min-height.px]="listHeight">
+        <div class="depth bid" *ngFor="let order of orderbook.bids; trackBy: trackByFn">
+            <div class="market-share" [style.width.%]="wallSize(order, 'bid')"></div>
+            <span class="price">{{ order.price | number: '1.8' }}</span>
+            <span class="amount">{{ order.amount | number:'1.0-4' }}</span>
+            <span class="btc-equivalent">
+                <!-- <span class="cf cf-btc"></span> -->
+                {{ order.price * order.amount | number:'1.1' }}
+            </span>
+        </div>
+    </div>
+</div>

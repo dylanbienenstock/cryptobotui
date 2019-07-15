@@ -1,0 +1,105 @@
+@import "variables";
+@import "mixins";
+
+$scale-x-height: 31px;
+$scale-y-width: 80px;
+$scale-background: $background;
+$scale-hover-background: rgba(white, 0.2);
+$scale-border-color: #666;
+
+:host {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    font-size: 0;
+
+    .canvas-wrapper, canvas {
+        width: 100%;
+        height: 100%;
+    }
+
+    .chart {
+        position: absolute;
+        height: 100%;
+        width: calc(100% - #{$scale-y-width});
+
+        &.show-time-scale {
+            height: calc(100% - #{$scale-x-height});
+        }
+
+        canvas {
+            image-rendering: pixelated;
+            transform: translateZ(0);
+        }
+    }
+
+    .scale {
+        cursor: pointer;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+
+    .scale-buttons {
+        cursor: pointer;
+        position: absolute;
+        right: -1px;
+        bottom: 0;
+        background: $scale-background;
+
+
+        > * {
+            z-index: 1;
+
+            .text {
+                display: inline-block;
+                position: relative;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 14px;
+            }
+
+            @include desktop {
+                .text {
+                    color: rgba($color, 0.5);
+                }
+
+                &:hover, &:active {
+                    background: $scale-hover-background;
+
+                    .text {
+                        color: $color;
+                    }
+                }
+            }
+        }
+
+        .reset {
+            display: inline-block;
+            width: $scale-y-width;
+            height: $scale-x-height;
+        }
+    }
+}
+
+// .price-scale-fade {
+//     $height: 30px;
+
+//     position: absolute;
+//     width: $scale-y-width;
+//     height: $height;
+//     right: 0;
+
+//     z-index: 99;
+
+//     &.upper {
+//         background: linear-gradient(180deg, $background 0%, transparent 100%);
+//     }
+
+//     &.lower {
+//         bottom: 0;
+//         background: linear-gradient(0deg, $background 0%, transparent 100%);
+//     }
+// }

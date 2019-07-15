@@ -1,0 +1,90 @@
+@import "variables";
+@import "functions";
+
+:host {
+    display: block;
+    overflow: hidden;
+    font-size: 0;
+    &::-webkit-scrollbar { width: 0 !important }
+
+    .container {
+        position: relative;
+    }
+    
+    .list {
+        display: inline-flex;
+        width: 100%;
+        flex-flow: column nowrap;
+
+        &:first-child {
+            justify-content: flex-end;
+        }
+    }
+
+    .depth, .spread {
+        height: scale(28px);
+        line-height: scale(28px);
+        padding: 0 scale(12px);
+        box-sizing: border-box;
+    }
+
+    .depth {
+        position: relative;
+        // display: flex;
+        display: grid;
+        grid-template-columns: scale(100px) scale(70px) auto;
+
+        * {
+            font-size: var(--font-size);
+        }
+
+        &.ask {
+            .price {
+                color: $color-bearish;
+            }
+
+            .market-share {
+                background: rgba($color-bearish, 0.1);
+            }
+        }
+    
+        &.bid {
+            .price {
+                color: $color-bullish;
+            }
+
+            .market-share {
+                background: rgba($color-bullish, 0.1);
+            }
+        }
+
+        .price,
+        .amount,
+        .btc-equivalent {
+            flex: 1;
+            z-index: 1;
+        }
+
+        .amount,
+        .btc-equivalent {
+            text-align: right;
+        }
+
+        .btc-equivalent {
+            .cf {
+                opacity: 0.3;
+            }
+        }
+
+        .market-share {
+            position: absolute;
+            right: 0;
+            height: 100%;
+        }
+    }
+
+    .spread {
+        background: $background-light;
+        font-size: var(--font-size);
+    }
+}

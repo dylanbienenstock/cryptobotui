@@ -1,0 +1,78 @@
+@import "variables";
+@import "mixins";
+@import "functions";
+
+:host {
+    display: flex;
+    flex-flow: column nowrap;
+    height: 100%;
+
+    &.vertical {
+        flex-flow: row nowrap;
+
+        .tab-container {
+            flex-flow: column nowrap;
+            width: 160px;
+            height: auto;
+
+            .tab {
+                flex: unset;
+                
+                .text {
+                    left: 8px;
+                    transform: translateY(-50%);
+                }
+            }
+        }
+
+        .view-container {
+            height: auto;
+        }
+    }
+
+    .tab-container {
+        display: flex;
+        flex-flow: row nowrap;
+        height: 48px;
+        background: $background-medium;
+        font-size: 0;
+
+        .tab {
+            flex: 1;
+
+            &.active {
+                background: $background-light;
+            }
+
+            &:not(.active) {
+                cursor: pointer;
+
+                @include desktop {
+                    &:hover {
+                        background: $button-background-hover;
+                    }
+
+                    &:active {
+                        background: $button-background-active;
+                    }
+                }
+            }
+
+            .text {
+                display: inline-block;
+                position: relative;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+
+                font-size: 16px;
+            }
+        }
+    }
+
+    .view-container {
+        flex: 1;
+        height: 100%;
+        overflow: hidden;
+    }
+}

@@ -1,0 +1,40 @@
+@import "variables";
+@import "functions";
+
+:host {
+    display: block;
+    overflow-y: hidden;
+    font-size: 0;
+
+    .trade {
+        position: relative;
+        display: flex;
+
+        height: scale(28px);
+        padding: 0 scale(12px);
+        box-sizing: border-box;
+
+        &.ask {
+            .price {
+                color: $color-bearish;
+            }
+        }
+    
+        &.bid {
+            .price {
+                color: $color-bullish;
+            }
+        }
+
+        .price,
+        .amount {
+            flex: 1;
+            z-index: 1;
+            font-size: var(--font-size);
+        }
+
+        .amount {
+            text-align: right;
+        }
+    }
+}

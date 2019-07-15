@@ -1,0 +1,72 @@
+<app-button-row [markup]="{
+    inline: true,
+    buttons: [
+        {
+            text: 'Timeframe',
+            click: onToggleTimeFrameMenu
+        },
+        {
+            text: 'Indicators',
+            click: onToggleIndicatorsMenu
+        }
+    ]
+}"></app-button-row>
+<div class="menu timeframe"
+*ngIf="state == 'menu' && menu == 'timeframe'">
+    <div class="menu-inner">
+        <div class="section" *ngFor="let section of timeFrames">
+            <div class="scale"
+            [class.active]="timeFrameScale == section.scale">
+                {{section.scale}}
+            </div>
+            <div class="button multiple" *ngFor="let multiple of section.multiples"
+            [class.active]="timeFrame == multiple * section.duration"
+            (click)="onSetTimeFrame(section.scale, section.duration * multiple)">
+                {{multiple}}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="menu indicators"
+*ngIf="state == 'menu' && menu == 'indicators'">
+    <div class="menu-inner">
+        <div class="section">
+            <div class="label">Applied</div>
+            <ng-container *ngFor="let details of _indicators.indicatorList">
+                <div class="button indicator" *ngIf="details.type != 'Price'"
+                (click)="onAddIndicator(details)">
+                    <div class="indicator-inner">
+                        <div class="name">{{details.name}}</div>
+                        <div class="type">
+                            {{ details.isLagging ? "Lagging" : "Leading" }}
+                            {{ details.type }}
+                            {{ details.isOscillator ? "Oscillator" : "Indicator" }}
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+
+        <div class="section">
+            <div class="label">Available</div>
+            <ng-container *ngFor="let details of _indicators.indicatorList">
+                <div class="button indicator" *ngIf="details.type != 'Price'"
+                (click)="onAddIndicator(details)">
+                    <div class="indicator-inner">
+                        <div class="name">{{details.name}}</div>
+                        <div class="type">
+                            {{ details.isLagging ? "Lagging" : "Leading" }}
+                            {{ details.type }}
+                            {{ details.isOscillator ? "Oscillator" : "Indicator" }}
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>
+<crypto-multi-chart
+[class.active]="state == 'chart'"
+[charts]="charts"
+(dblclick)="onToggleFullscreen()">
+</crypto-multi-chart>

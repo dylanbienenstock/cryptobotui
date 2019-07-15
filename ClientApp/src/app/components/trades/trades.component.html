@@ -1,0 +1,6 @@
+<div class="container">
+    <div class="trade {{ trade.side }}" *ngFor="let trade of trades.list; trackBy: trackByFn">
+        <span class="price">{{ trade.price | number: '1.8' }}</span>
+        <span class="amount">{{ trade.amount | number: '1.0' }}</span>
+    </div>
+</div>

@@ -1,0 +1,6 @@
+<ng-container *ngIf="markup?.options">
+    <div class="option" *ngFor="let option of markup.options"
+    (click)="onOptionClicked(option)">
+        {{ option.text }}
+    </div>
+</ng-container>

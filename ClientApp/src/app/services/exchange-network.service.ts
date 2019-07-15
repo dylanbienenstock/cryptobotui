@@ -1,53 +1,44 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { SignalRService } from './signalr.service';
-import { BacktestDataCompletion, ExchangeNetworkSnapshot } from './exchange-network.types';
+import { BacktestDataCompletion, ExchangeNetworkSnapshot, MarketTicker } from './exchange-network.types';
 import { HubResponse, MarketReference } from './signalr.types';
-import { Observable, Subscription, interval } from 'rxjs';
-import { delayWhen } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+
+const alphabetically = (a, b): number => {
+    if (a.symbol > b.symbol) return 1;
+    if (a.symbol < b.symbol) return -1;
+};
 
 @Injectable({
     providedIn: 'root'
 })
 export class ExchangeNetworkService {
 
-    constructor(private signalR: SignalRService) {
-        
-        this.backtestDataCompletionReceived = 
-            new EventEmitter<BacktestDataCompletion>();
-
-        this.backtestDataCompletionReceivedSub =
-            this.backtestDataCompletionReceived
-                .pipe(delayWhen(_ => interval(this.backtestDataCompletionDelay)))
-                .subscribe(val => this.onBacktestDataCompletionReceived(val));
-    }
+    constructor(private signalR: SignalRService) { }
     
     public networkSnapshot: ExchangeNetworkSnapshot;
+    public networkSnapshotReceived = new EventEmitter<void>();
+    public marketTickers: { [marketRefKey: string]: MarketTicker } = {};
+
+    private waiting: boolean = false;
+
     public get symbolCount(): number {
         return this.networkSnapshot.exchangeSnapshots
             .map(e => e.marketRefs.map(m => m.symbol))
-            .reduce((accum, val) => [ ...accum, ...val ])
+            .reduce((accum, val) => [...accum, ...val])
             .length;
     }
 
-    public collectingBacktestData: { [marketRefKey: string]: boolean } = { };
     public backtestDataCompletion: { [marketRefKey: string]: BacktestDataCompletion } = { };
-
-    private backtestDataCompletionReceived:    EventEmitter<BacktestDataCompletion>;
-    private backtestDataCompletionReceivedSub: Subscription;
-
-    private backtestDataCompletionCount: number;
-    private get backtestDataCompletionDelay(): number {
-        ++this.backtestDataCompletionCount < this.symbolCount
-            ? (this.backtestDataCompletionCount % 5 == 0
-                ? 2000
-                : 500)
-            : 0;
-
-        return 2;
-    }
+    public backtestDataCompletionReceived = new EventEmitter<BacktestDataCompletion>();
+    public backtestDataCompletionEmpty: boolean = true;
 
     public async getSnapshot(): Promise<void> {
-        if (this.networkSnapshot) return;
+        if (this.networkSnapshot || this.waiting) return;
+        
+        this.waiting = true;
+
+        await this.signalR.connected;
 
         let response = await this.signalR
             .invoke<ExchangeNetworkSnapshot>("GetExchangeNetworkSnapshot");
@@ -59,19 +50,31 @@ export class ExchangeNetworkService {
             .map((exchangeSnapshot) => ({
                 ...exchangeSnapshot,
                 symbols: exchangeSnapshot.marketRefs
-                    .sort((a, b) => {
-                        if (a.symbol > b.symbol) return 1;
-                        if (a.symbol < b.symbol) return -1;
-                    })
+                    .sort(alphabetically)
             }));
 
         this.networkSnapshot = response.data;
+        this.networkSnapshotReceived.emit();
     }
 
-    public async streamBacktestDataCompletion(): Promise<void> {
+    public streamBacktestDataCompletion(force: boolean = false): void {
+        if (!force && !this.backtestDataCompletionEmpty) {
+            let i = 0;
+            let vals = Object.values(this.backtestDataCompletion)
+            let next = () => {
+                this.onBacktestDataCompletionReceived(vals[i++]);
+                if (i < vals.length) setTimeout(next, 25);
+            };
+
+            setTimeout(next);
+            return;
+        }
+
+        this.backtestDataCompletionEmpty = false;
+
         this.signalR.stream<BacktestDataCompletion>("StreamBacktestDataCompletion")
             .subscribe({
-                next:  (val) => this.backtestDataCompletionReceived.emit(val),
+                next:  (val) => this.onBacktestDataCompletionReceived(val),
                 error: (err) => console.error(err),
                 complete: null
             });
@@ -80,19 +83,17 @@ export class ExchangeNetworkService {
     public isCollectingBacktestData(exchangeName: string, symbol: string): boolean
     {
         let marketRef = new MarketReference(exchangeName, symbol);
-        return this.collectingBacktestData[marketRef.key];
+        return this.backtestDataCompletion[marketRef.key].collecting;
     }
 
     public startCollectingBacktestData(exchangeName: string, symbol: string): void {
         let marketRef = new MarketReference(exchangeName, symbol);
 
-        console.log("START COLLECTING: ", marketRef);
-
         this.onBacktestDataCollectionStarted(marketRef);
 
         this.signalR.stream<BacktestDataCompletion>("StartCollectingBacktestData", marketRef)
             .subscribe({
-                next:  (val) => this.backtestDataCompletionReceived.emit(val),
+                next:  (val) => this.onBacktestDataCompletionReceived(val),
                 error: (err) => console.error(err),
                 complete: () => this.onBacktestDataCollectionStopped(marketRef)
             });
@@ -107,20 +108,41 @@ export class ExchangeNetworkService {
             return console.error(response);
 
         this.onBacktestDataCollectionStopped(marketRef);
-
-        console.log("STOP COLLECTING: ", marketRef);
     }
 
     private onBacktestDataCompletionReceived(completion: BacktestDataCompletion): void {
         this.backtestDataCompletion[completion.marketRef.key] = completion;
-        this.backtestDataCompletion = { ...this.backtestDataCompletion };
+        this.backtestDataCompletionReceived.emit(completion);
     }
 
     private onBacktestDataCollectionStarted(marketRef: MarketReference): void {
-        this.collectingBacktestData[marketRef.key] = true;
+        console.log("onBacktestDataCollectionStarted", marketRef);
+        this.backtestDataCompletion[marketRef.key].collecting = true;
     }
     
     private onBacktestDataCollectionStopped(marketRef: MarketReference): void {
-        this.collectingBacktestData[marketRef.key] = false;
+        console.log("onBacktestDataCollectionStopped", marketRef);
+        this.backtestDataCompletion[marketRef.key].collecting = false;
+    }
+
+    public subscribeToMarketTickers(exchangeName: string): Observable<void> {
+        var subject = new Subject<void>();
+
+        this.signalR.stream<MarketTicker[]>("SubscribeToMarketTickers", exchangeName)
+            .subscribe({
+                next:  (val) => {
+                    this.onMarketTickersReceived(val);
+                    subject.next();
+                },
+                error: (err) => console.error(err),
+                complete: () => console.log("done")
+            });
+
+        return subject;
+    }
+
+    public onMarketTickersReceived(marketTickers: MarketTicker[]) {
+        for (let marketTicker of marketTickers)
+            this.marketTickers[marketTicker.marketRef.key] = marketTicker;
     }
 }

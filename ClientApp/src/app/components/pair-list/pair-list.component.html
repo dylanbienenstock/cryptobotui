@@ -1,0 +1,32 @@
+<app-button-row [markup]="{
+  inline: true,
+  buttons: [
+        {
+            text: exchangeName,
+            menu: exchangeMenu
+        },
+        {
+            text: quoteCurrency,
+            menu: quoteCurrencyMenu
+        }
+    ]
+}"></app-button-row>
+<div class="pair-list">
+    <div class="pair" *ngFor="let ticker of tickers"
+    (click)="ticker.clickFn()">
+        <span class="base-currency">{{ ticker.baseCurrency }}</span>
+
+        <app-price class="last-price"
+        [marketRef]="ticker.marketRef"
+        [price]="ticker.lastPrice">
+        </app-price>
+
+        <span class="change-percentage"
+        [class.negative]="ticker.isPercentageNegative"
+        [class.zero]="ticker.isPercentageZero">
+            {{ ticker.priceChangePercentage }}
+        </span>
+
+        <span class="volume">{{ ticker.volume }}</span>
+    </div>
+</div>

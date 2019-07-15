@@ -1,0 +1,28 @@
+@import "variables";
+@import "mixins";
+@import "functions";
+
+:host {
+    position: absolute;
+    background: $background;
+    top: $button-height;
+    min-width: 100%;
+    z-index: 1;
+
+    .option {
+        cursor: pointer;
+        font-size: $button-font-size;
+        padding: 4px 8px;
+        white-space: nowrap;
+
+        @include desktop {
+            &:hover {
+                background: lighten($background, 9%);
+            }
+
+            &:active {
+                background: lighten($background, 22.5%);
+            }
+        }
+    }
+}

@@ -1,0 +1,11 @@
+<div class="text">
+    <span>Page {{page + 1}} of {{pageCount}}</span>
+</div>
+
+<div class="goto previous" (click)="onPageChanged(-1)">
+    <img src="assets/ui/chevron-left.svg">
+</div>
+
+<div class="goto next" (click)="onPageChanged(1)">
+    <img src="assets/ui/chevron-right.svg">
+</div>

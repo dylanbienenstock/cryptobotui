@@ -1,6 +1,11 @@
-<div class="container" *ngIf="markup"
-[class.inline]="markup.inline">
+<app-menu *ngIf="markup.menu && (!ready || menuVisible)" 
+(width)="onMenuWidth($event)" 
+(close)="onMenuClosed()"
+[markup]="markup.menu"></app-menu>
+
+<div class="container" (click)="onClick()">
     <div class="container-inner">
         <span class="text">{{ markup.text }}</span>
+        <span class="menu-arrow" *ngIf="markup.menu">▾</span>
     </div>
 </div>

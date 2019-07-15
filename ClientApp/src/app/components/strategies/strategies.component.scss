@@ -1,0 +1,156 @@
+@import "variables";
+@import "mixins";
+@import "functions";
+
+:host {
+    height: $usable-height;
+    max-height: $usable-height;
+    display: grid;
+    grid-gap: 4px;
+    overflow: hidden;
+    // grid-template-rows: auto 288px;
+    // grid-template-columns: scale(256px) auto;
+    // grid-template-areas: 
+    //     "files editor"
+    //     "files output";
+
+    .file-list-container {
+        grid-area: files;
+        background: $background-medium;
+        font-size: 14px;
+
+        .file-list {
+            .file {
+                cursor: pointer;
+
+                display: flex;
+                flex-flow: row nowrap;
+                height: scale(22px);
+                line-height: scale(22px);
+                font-size: scale(14px);
+
+                &.selected {
+                    background: lighten($background-light, 1%) !important;
+                }
+
+                &.root {
+                    text-transform: uppercase;
+                    font-size: scale(12px);
+                    font-weight: bold;
+                    padding-left: 8px;
+                    background: lighten($background-light, 2%) !important;
+                }
+
+                @include desktop {
+                    &:hover {
+                        background: $background-light;
+                    }
+
+                    &:active {
+                        background: lighten($background-light, 4%);
+                    }
+                }
+
+                img {
+                    width: scale(6px);
+                    height: 100%;
+                    margin-right: scale(12px);
+
+                    pointer-events: none;
+
+                    &.visible {
+                        transform: rotate(90deg);
+                    }
+
+                    &.file-type {
+                        width: scale(9px);
+                        margin-right: scale(8px);
+                        margin-left: scale(4px);
+                    }
+                }
+
+                .text {
+                    transform: translateY(1px);
+                }
+            }
+        }
+    }
+
+    .editor {
+        grid-area: editor;
+        display: flex;
+        flex-flow: column nowrap;
+        background: $background-medium;
+
+        .tab-container {
+            height: scale(24px);
+            line-height: scale(24px);
+            margin-bottom: 8px;
+
+            .tab {
+                cursor: pointer;
+                display: flex;
+                flex-flow: row nowrap;
+                font-size: scale(14px);
+
+                padding: 0 scale(12px);
+                height: 100%;
+                line-height: scale(24px);
+
+                img {
+                    width: scale(9px);
+                    height: 100%;
+                    margin-right: scale(8px);
+                }
+
+                .text {
+                    transform: translateY(1px);
+                }
+            }
+        }
+
+        ngx-monaco-editor {
+            grid-area: editor;
+            flex: 1;
+    
+            /deep/ .editor-container {
+                height: 100% !important;
+            }
+        }
+    }
+
+    .output-container {
+        grid-area: output;
+        display: flex;
+        flex-flow: column nowrap;
+        background: $background-medium;
+        overflow: hidden;
+
+        .option-container {
+            display: flex;
+            background: lighten($background-light, 2%);
+            height: scale(32px);
+            line-height: scale(32px);
+
+            .option {
+                cursor: pointer;
+                padding: 0 scale(12px);
+                font-size: scale(14px);
+
+                @include desktop {
+                    &:hover {
+                        background: $button-background-hover;
+                    }
+
+                    &:active {
+                        background: $button-background-active;
+                    }
+                }
+            }
+        }
+
+        .output {
+            flex: 1;
+        }
+    }
+}

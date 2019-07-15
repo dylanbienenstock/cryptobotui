@@ -1,13 +1,19 @@
 @import "variables";
+@import "functions";
 
 :host {
+    // --scale: 1;
+    --font-size: calc(13px * var(--scale));
+
     display: grid;
+    grid-gap: 4px;
+    padding: 4px;
     height: 100%;
+    box-sizing: border-box;
     
     grid-template-columns: $sidebar-width auto;
-    grid-template-rows: $button-height auto $button-height;
+    grid-template-rows: auto $button-height;
     grid-template-areas: 
-        "navbar  navbar"
         "sidebar content"
         "status  status";
 
@@ -26,7 +32,10 @@
     .content {
         grid-area: content;
 
-        overflow-y: auto;
+        overflow-y: hidden;
         overflow-x: hidden;
+
+        // border: border();
+        
     }
 }

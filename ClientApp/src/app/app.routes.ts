@@ -1,11 +1,14 @@
 import { HomeComponent } from "./components/home/home.component";
 import { BacktestDatabaseComponent } from "./components/backtest-database/backtest-database.component";
+import { TradingTerminalComponent } from "./components/trading-terminal/trading-terminal.component";
+import { StrategiesComponent } from "./components/strategies/strategies.component";
 
 const PageRoutes: { [name: string]: string } = {
-    "dashboard":  "",
-    "strategies": "strategies",
-    "database":   "database",
-    "wallets":    "wallets",
+    "dashboard": "",
+    "terminal":  "terminal",
+    "strategies":  "strategies",
+    "database":  "database",
+    "wallets":   "wallets",
 };
 
 const Routes = [
@@ -18,8 +21,15 @@ const Routes = [
         }
     },
     {
+        path: PageRoutes["terminal"],
+        component: TradingTerminalComponent,
+        data: {
+            page: "terminal"
+        }
+    },
+    {
         path: PageRoutes["strategies"],
-        component: HomeComponent,
+        component: StrategiesComponent,
         data: {
             page: "strategies"
         }

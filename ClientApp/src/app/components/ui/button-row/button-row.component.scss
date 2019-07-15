@@ -1,0 +1,10 @@
+@import "variables";
+@import "mixins";
+
+:host {
+    @include fixed-height($button-height);
+    overflow: visible;
+
+    display: block;
+    background: $background-light;
+}

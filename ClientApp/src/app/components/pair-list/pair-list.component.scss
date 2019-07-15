@@ -1,0 +1,60 @@
+@import "variables";
+@import "mixins";
+@import "functions";
+
+:host {
+    display: flex;
+    flex-flow: column;
+    overflow-y: hidden;
+
+    .pair-list {
+        flex: 1;
+        display: block;
+        overflow-y: scroll;
+
+        .pair {
+            * { font-size: var(--font-size); }
+
+            height: scale(28px);
+            line-height: scale(28px);
+
+            display: grid;
+            grid-template-columns: scale(55px) scale(80px) scale(58px) auto;
+
+            cursor: pointer;
+            padding: scale(2px) scale(8px);
+
+            @include desktop {
+                &:hover {
+                    background: $button-background-hover;
+                }
+
+                &:active {
+                    background: $button-background-active;
+                }
+            }
+
+            .last-price,
+            .change-percentage,
+            .volume {
+                text-align: right;
+            }
+
+            .base-currency {
+                font-weight: bold;
+            }
+
+            .change-percentage {
+                color: $color-bullish;
+
+                &.negative {
+                    color: $color-bearish;
+                }
+
+                &.zero {
+                    color: darken($color, 10%) !important;
+                }
+            }
+        }
+    }
+}

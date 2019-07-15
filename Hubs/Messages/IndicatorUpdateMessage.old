@@ -1,0 +1,138 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using CryptoBot.Exchanges;
+using CryptoBot.Exchanges.Series;
+using CryptoBot.Indicators;
+using CryptoBotUI.Hubs.Types;
+using MessagePack;
+
+namespace CryptoBotUI.Hubs.Messages
+{
+    [MessagePackObject]
+    public class IndicatorChange {
+        [Key("fieldName")]
+        public string FieldName;
+
+        [Key("changes")]
+        public IndicatorFieldChange[] Changes;
+    }
+
+    [MessagePackObject]
+    public class IndicatorFieldChange
+    {
+        [Key("time")]
+        public DateTime Time;
+
+        [Key("value")]
+        public float Value;
+
+        public IndicatorFieldChange() { }
+
+        public IndicatorFieldChange(DateTime time, float value)
+        {
+            Time = time;
+            Value = value;
+        }
+    }
+
+    // [MessagePackObject]
+    // public class IndicatorUpdateMessage
+    // {
+    //     [Key("indicatorRef")]
+    //     public IndicatorReference IndicatorRef;
+        
+    //     [Key("changes")]
+    //     public Dictionary<string, IndicatorUpdate[]> Changes;
+
+    //     [Key("isUpdate")]
+    //     public bool IsUpdate;
+
+    //     public IndicatorUpdateMessage() { }
+
+    //     public IndicatorUpdateMessage(Indicator indicator, IndicatorDataAggregate dataAggregate, bool isUpdate)
+    //     {
+    //         IndicatorRef = new IndicatorReference(indicator);
+    //         Changes = dataAggregate.Fields.Values
+    //             .ToDictionary
+    //             (
+    //                 f => f.FieldName, 
+    //                 f => f.Values
+    //                     .Select(v => new IndicatorUpdate(f.Values.GetTime(v), v.Value))
+    //                     // .GroupBy(u => u.Time.ToString())
+    //                     // .Select(g => g.First())
+    //                     .ToArray()
+    //             );
+    //         IsUpdate = isUpdate;
+    //     }
+
+    //     public IndicatorUpdateMessage[] Split(int maxLength)
+    //     {
+    //         var fieldNames = Changes.Keys.ToArray();
+    //         var changeCount = Changes[fieldNames[0]].Length;
+    //         var messageCount = (int)Math.Ceiling((double)maxLength / (double)changeCount);
+    //         var messages = new IndicatorUpdateMessage[messageCount];
+            
+    //         for (int i = 0; i < messageCount; i++)
+    //         {
+    //             messages[i] = new IndicatorUpdateMessage()
+    //             {
+    //                 IndicatorRef = IndicatorRef,
+    //                 Changes = new Dictionary<string, IndicatorUpdate[]>(),
+    //                 IsUpdate = false
+    //             };
+
+    //             foreach (string fieldName in fieldNames)
+    //                 messages[i].Changes[fieldName] = Changes[fieldName]
+    //                     .Skip(maxLength * i)
+    //                     .Take(Math.Min(maxLength, Changes[fieldName].Length - maxLength * i))
+    //                     .ToArray();
+    //         }
+
+    //         return messages;
+    //     }
+    // }
+
+    [MessagePackObject]
+    public class IndicatorManifoldChange
+    {
+        [Key("id")]
+        public string Id;
+        
+        [Key("changes")]
+        public IndicatorChange[] Changes;
+
+        public IndicatorManifoldChange() { }
+
+        public IndicatorManifoldChange(Indicator indicator, IndicatorDataAggregate dataAggregate)
+        {
+            Id = indicator.Id;
+        }
+
+        // public IndicatorManifoldChange[] Split(int maxLength)
+        // {
+        //     var fieldNames = Changes.Keys.ToArray();
+        //     var changeCount = Changes[fieldNames[0]].Length;
+        //     var messageCount = (int)Math.Ceiling((double)maxLength / (double)changeCount);
+        //     var messages = new IndicatorManifoldChange[messageCount];
+            
+        //     for (int i = 0; i < messageCount; i++)
+        //     {
+        //         messages[i] = new IndicatorManifoldChange()
+        //         {
+        //             IndicatorRef = IndicatorRef,
+        //             Changes = new Dictionary<string, IndicatorFieldChange[]>(),
+        //             IsUpdate = false
+        //         };
+
+        //         foreach (string fieldName in fieldNames)
+        //             messages[i].Changes[fieldName] = Changes[fieldName]
+        //                 .Skip(maxLength * i)
+        //                 .Take(Math.Min(maxLength, Changes[fieldName].Length - maxLength * i))
+        //                 .ToArray();
+        //     }
+
+        //     return messages;
+        // }
+    }
+}

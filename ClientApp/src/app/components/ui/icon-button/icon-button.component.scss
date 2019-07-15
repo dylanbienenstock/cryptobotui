@@ -50,7 +50,7 @@
         left: 50%;
         transform: translate(-50%, -50%);
 
-        filter: drop-shadow(0 0 4px rgba(black, 0.6));
+        // filter: drop-shadow(0 0 4px rgba(black, 0.6));
 
         .icon {
             @include fixed-size($icon-button-icon-size);

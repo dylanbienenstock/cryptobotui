@@ -1,34 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { ExchangeNetworkService } from 'src/app/services/exchange-network.service';
+import { ProgressBarComponent } from '../ui/progress-bar/progress-bar.component';
+import { Subscription } from 'rxjs';
+import { InterfaceService } from 'src/app/services/interface.service';
 
 @Component({
     selector: 'app-backtest-database',
     templateUrl: './backtest-database.component.html',
     styleUrls: ['./backtest-database.component.scss']
 })
-export class BacktestDatabaseComponent implements OnInit {
+export class BacktestDatabaseComponent {
 
     constructor(public exchangeNetwork: ExchangeNetworkService) { }
 
-    public flash: boolean;
+    public page: number = 0;
+    public pageCount: number = 0;
 
-    ngOnInit() {
-        setInterval(() => {
-            this.flash = !this.flash;
-        }, 500);
+    public onPageChanged(page: number) {
+        this.page = page;
     }
 
-    public isCollecting(exchangeName: string, symbol: string): boolean {
-        return this.exchangeNetwork.isCollectingBacktestData(exchangeName, symbol);
-    }
-
-    public async toggleCollecting(exchangeName: string, symbol: string): Promise<void>
-    {
-        if (!this.exchangeNetwork.isCollectingBacktestData(exchangeName, symbol))
-            return this.exchangeNetwork
-                .startCollectingBacktestData(exchangeName, symbol);
-
-        return await this.exchangeNetwork
-            .stopCollectingBacktestData(exchangeName, symbol);
+    public onPageCountChanged(pageCount: number) {
+        this.pageCount = pageCount;
     }
 }

@@ -1,7 +1,8 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, ElementRef } from '@angular/core';
 import { SignalRService } from './services/signalr.service';
-import { HubConnectionState } from '@aspnet/signalr';
 import { ExchangeNetworkService } from './services/exchange-network.service';
+import { InterfaceService } from './services/interface.service';
+import { ScaleService } from './services/scale.service';
 
 @Component({
     selector: 'app-root',
@@ -12,14 +13,25 @@ export class AppComponent implements OnInit {
     title = 'app';
 
     constructor(
+        private hostRef: ElementRef,
+        private scale: ScaleService,
         private signalR: SignalRService,
-        private exchangeNetwork: ExchangeNetworkService
+        private exchangeNetwork: ExchangeNetworkService,
+        private _interface: InterfaceService
     ) { }
     
+    private get host(): HTMLElement {
+        return this.hostRef.nativeElement;
+    }
+
     async ngOnInit() {
+        this.scale.changed
+            .subscribe(scale => this.host.style.setProperty("--scale", scale.toString()))
+
+        this.scale.setScale(1);
+
         await this.signalR.connect();
         await this.exchangeNetwork.getSnapshot();
-        this.exchangeNetwork.streamBacktestDataCompletion();
     }
 
     @HostListener("window:dragstart", ["$event"])
@@ -28,5 +40,12 @@ export class AppComponent implements OnInit {
         e.stopPropagation();
         e.preventDefault();
         return false;
+    }
+
+    @HostListener("window:load")
+    onWindowLoad() {
+        setTimeout(() => {
+            this._interface.ready = true;
+        });
     }
 }

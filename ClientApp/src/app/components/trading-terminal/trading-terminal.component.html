@@ -1,0 +1,6 @@
+<div class="status">((Currently viewing: {{marketRef.key}}))</div>
+<app-pair-list (symbolClicked)="onSymbolClicked($event)"></app-pair-list>
+<app-chart [marketRef]="marketRef"></app-chart>
+<app-orderbook [marketRef]="marketRef"></app-orderbook>
+<app-trades [marketRef]="marketRef"></app-trades>
+<div class="fills"></div>

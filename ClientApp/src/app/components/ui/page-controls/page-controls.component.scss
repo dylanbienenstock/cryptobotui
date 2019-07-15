@@ -1,0 +1,64 @@
+@import "variables";
+@import "mixins";
+
+$size: 48px;
+
+:host {
+    display: grid;
+    grid-template-columns: auto $size $size;
+
+    height: $size;
+    font-size: 0;
+
+    .text {
+        display: inline-block;
+        padding: 0 16px;
+
+        > * {
+            display: inline-block;
+            font-family: $font-mono;
+            font-size: $font-size;
+            font-weight: bold;
+            color: $color-dark;
+
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    }
+    
+    .goto {
+        @include fixed-size($size);
+
+        cursor: pointer;
+        
+        @include desktop {
+            img {
+                filter: brightness(70%);
+            }
+
+            &:hover {
+                background: $button-background-hover;
+
+                img {
+                    filter: brightness(100%);
+                }  
+            }
+
+            &:active {
+                background: $button-background-active;
+
+                img {
+                    filter: brightness(130%);
+                }  
+            }
+        }
+
+        img {
+            position: relative;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+}

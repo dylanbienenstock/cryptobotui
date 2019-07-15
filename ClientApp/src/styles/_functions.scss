@@ -1,5 +1,9 @@
 @import "variables";
 
-@function border() {
-    @return unquote("0.5px solid #{$border}");
+@function scale($num) {
+    @return calc(#{$num} * var(--scale));
+}
+
+@function border($color: $border) {
+    @return unquote("0.5px solid #{$color}");    
 }

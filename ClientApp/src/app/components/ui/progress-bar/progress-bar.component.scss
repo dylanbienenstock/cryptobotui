@@ -44,12 +44,14 @@
         opacity: 0.5;
         transition: opacity 250ms ease;
 
-        @keyframes progress-bar-appear {
-            from { width: 0%;  }
-            to   { width: 100% }
+        &.animate {
+            @keyframes progress-bar-appear {
+                from { width: 0%;  }
+                to   { width: 100% }
+            }
+    
+            // animation: progress-bar-appear 400ms ease forwards;
         }
-
-        animation: progress-bar-appear 400ms ease forwards;
 
         &.flash {
             opacity: 0.8;

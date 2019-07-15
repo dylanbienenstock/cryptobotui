@@ -1,0 +1,26 @@
+<div class="scale">
+    <!-- <div class="price-scale-fade upper"></div> -->
+    <!-- <div class="price-scale-fade lower"></div> -->
+    
+    <div class="canvas-wrapper">
+        <canvas #scale
+        (mousedown)="onScaleMouseDown({ x: $event.clientX, y: $event.clientY }, $event.button)">
+        </canvas>
+    </div>
+
+    <div class="scale-buttons" *ngIf="showTimeScale">
+        <div class="reset" (click)="onResetScaleBoth()">
+            <span class="text">Reset</span>
+        </div>
+    </div>
+</div>
+
+<div class="chart"
+[class.show-time-scale]="showTimeScale">
+    <div class="canvas-wrapper">
+        <canvas #chart
+        (mousedown)="onChartMouseDown({ x: $event.clientX, y: $event.clientY }, $event.button)"
+        (mousewheel)="onChartMouseWheel({ x: $event.deltaX, y: $event.deltaY })">
+        </canvas>
+    </div>
+</div>

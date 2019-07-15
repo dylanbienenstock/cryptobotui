@@ -37,14 +37,7 @@ namespace CryptoBotUI
                 );
             });
 
-            services.AddSignalR()
-                .AddMessagePackProtocol(options =>
-                {
-                    // options.FormatterResolvers = new List<MessagePack.IFormatterResolver>()
-                    // {
-                    //     MessagePack.Resolvers.ContractlessStandardResolver.Instance
-                    // };
-                });
+            services.AddSignalR();
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -72,7 +65,8 @@ namespace CryptoBotUI
                     Console.ResetColor();
                 }
             });
-            
+
+
             // Wait for the exchange network to connect
             app.UseSignalR(options =>
             {
@@ -95,7 +89,6 @@ namespace CryptoBotUI
             // app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
-
             app.UseSpa(spa =>
             {
                 // To learn more about options for serving an Angular SPA from ASP.NET Core,
@@ -109,6 +102,11 @@ namespace CryptoBotUI
                     spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
                 }
             });
+
+            // var exchangeNetworkService = (ExchangeNetworkService)app.ApplicationServices
+            //     .GetRequiredService(typeof(ExchangeNetworkService));
+
+            // exchangeNetworkService.Connect().GetAwaiter().GetResult();
         }
     }
 }

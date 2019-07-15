@@ -1,0 +1,44 @@
+<div class="file-list-container" *ngIf="showFiles">
+    <div class="file-list">
+        <ng-template #fileNodeView let-fileNode="fileNode" let-depth="depth">
+            <div class="file" 
+            [class.root]="fileNode.root"
+            [class.selected]="selectedFileNode == fileNode"
+            [style.padding-left.px]="8 + depth * 16"
+            (click)="onClickFileNode(fileNode)">
+                <img [class.visible]="fileNode.children && fileNode.visible" 
+                [class.file-type]="!fileNode.children"
+                [src]="fileNode.children ? 'assets/ui/triangle.svg' : 'assets/ui/ts.svg'">
+                <span class="text">{{fileNode.name}}</span>
+            </div>
+            <ng-container *ngIf="fileNode.visible">
+                <ng-container *ngFor="let childNode of fileNode.children">
+                    <ng-container *ngTemplateOutlet="fileNodeView; context: { fileNode: childNode, depth: depth + 1 }"></ng-container>
+                </ng-container>
+            </ng-container>
+        </ng-template>
+
+        <ng-container *ngTemplateOutlet="fileNodeView; context: { fileNode: openEditorsRoot, depth: 0 }"></ng-container>
+        <ng-container *ngTemplateOutlet="fileNodeView; context: { fileNode: fileRoot, depth: 0 }"></ng-container>
+    </div>
+</div>
+
+<div class="editor">
+    <div class="tab-container">
+        <div class="tab">
+            <img src="assets/ui/ts.svg">
+            <span class="text">Untitled</span>
+        </div>
+    </div>
+    <ngx-monaco-editor [options]="editorOptions" [(ngModel)]="code"></ngx-monaco-editor>
+</div>
+
+<div class="output-container" *ngIf="showOutput">
+    <div class="option-container">
+        <div class="option">Problems</div>
+        <div class="option">Output</div>
+        <div class="option">Terminal</div>
+    </div>
+
+    <div class="output" #output></div>
+</div>

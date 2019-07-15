@@ -1,0 +1,12 @@
+<div class="tab-container">
+    <div class="tab"
+    *ngFor="let view of views"
+    [class.active]="view.visible"
+    (click)="onTabClicked(view)">
+        <div class="text">{{view.tab}}</div>
+    </div>
+</div>
+
+<div class="view-container">
+    <ng-content></ng-content>
+</div>

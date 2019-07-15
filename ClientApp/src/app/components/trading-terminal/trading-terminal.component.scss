@@ -1,0 +1,29 @@
+@import "variables";
+@import "functions";
+
+$padding: 4px;
+
+:host {
+    height: $usable-height;
+
+    display: grid;
+    grid-gap: $padding;
+    grid-template-columns: scale(280px) auto scale(275px) scale(200px);
+    grid-template-rows: 48px auto 256px;
+    grid-template-areas: 
+        "status status status    status"
+        "pairs  chart  orderbook trades"
+        "fills  fills  fills     fills";
+        
+    > * {
+        background: $background-medium;
+    }
+
+    .status { grid-area: status; }
+    app-pair-list { grid-area: pairs; }
+    app-chart { grid-area: chart; }
+    app-orderbook { grid-area: orderbook; }
+    app-trades { grid-area: trades; }
+    .fills { grid-area: fills; }
+
+}

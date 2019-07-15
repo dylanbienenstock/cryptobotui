@@ -14,4 +14,8 @@ export class MarketReference {
         this.symbol = symbol;
         this.key = `${this.exchangeName}::${this.symbol}`;
     }
+
+    public get baseCurrency(): string {
+        return this.symbol.split("/")[0];
+    }
 }

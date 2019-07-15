@@ -2,11 +2,12 @@
 @import "functions";
 
 @import url("https://fonts.googleapis.com/css?family=Roboto:300,400");
+@import "cryptofont/cryptofont";
 
 @font-face {
     font-family: "Iosevka";
-    src: url("assets/Iosevka.woff2") format("woff2"),
-        url("assets/Iosevka.woff") format("woff");
+    src: url("assets/fonts/Iosevka.woff2") format("woff2"),
+        url("assets/fonts/Iosevka.woff") format("woff");
     font-weight: normal;
     font-style: normal;
 }
@@ -20,7 +21,7 @@ body {
     font-size: 14px;
     background: $background;
 
-    border: border();
+    // border: border();
     box-sizing: border-box;
 
     $width: calc(100vw - 1px);
@@ -38,4 +39,22 @@ body {
 
 *:not(.selectable) {
     user-select: none;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: $background-light;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: $button-background-hover;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: $button-background-active;
 }

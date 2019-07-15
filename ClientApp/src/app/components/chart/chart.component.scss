@@ -1,0 +1,121 @@
+@import "variables";
+@import "mixins";
+
+:host {
+    background: $background-medium;
+    position: relative;
+
+    .menu {
+        position: absolute;
+        width: 100%;
+        z-index: 99999999;
+        background: rgba($background, 0.8);
+
+        padding-right: 80px;
+        padding-bottom: 30px;
+        box-sizing: border-box;
+
+        &.indicators {
+            .menu-inner {
+                display: inline-flex;
+
+            }
+        }
+
+        .menu-inner {
+            position: relative;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: inline-block;
+
+            text-shadow: 0 0 8px black;
+
+            &:hover {
+                .section:hover {
+                    .scale {
+                        color: $color !important;
+                    }
+                }
+
+                .section:not(:hover) > .scale, 
+                .multiple:not(:hover) {
+                    color: darken($color, 30%) !important;
+                }
+            }
+
+            .section {
+                .scale, .multiple {
+                    display: inline-block;
+                    font-size: 24px;
+                    height: 60px;
+                    line-height: 60px;
+                }
+
+                .scale, .button {
+                    &:not(.active):not(:hover) {
+                        color: darken($color, 30%);
+                    }    
+                }
+
+                .scale {
+                    text-align: right;
+                    width: 88px;
+                    margin-right: 12px;
+                }
+    
+                .multiple {
+                    width: 60px;
+                    text-align: center;
+                }
+
+                .label {
+                    position: relative;
+                    line-height: 48px;
+                    font-size: 18px;
+                }
+
+                .label, .indicator {
+                    padding: 0 12px;
+                    height: 48px;
+                    white-space: nowrap;
+
+                    > * { 
+                        position: relative;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        display: inline-block;
+                        line-height: 1.1;
+
+                        .name {
+                            font-size: 18px;
+                        }
+
+                        .type {
+                            font-size: 12px;
+                        }
+                    }
+                }
+
+                .button {
+                    cursor: pointer;
+
+                    @include desktop {
+                        &:hover {
+                            background: $button-background-hover;
+                            color: white;
+                        }
+
+                        &:active {
+                            background: $button-background-active;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .menu, crypto-multi-chart {
+        height: calc(100% - #{$button-height});
+    }
+}

@@ -1,0 +1,7 @@
+<crypto-chart *ngFor="let indicators of charts; first as primary; last as showTimeScale"
+[indicators]="indicators"
+[primary]="primary"
+[showTimeScale]="showTimeScale"
+[state]="state"
+(setState)="onStateChanged($event)">
+</crypto-chart>

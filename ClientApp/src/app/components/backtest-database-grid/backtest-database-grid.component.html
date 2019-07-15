@@ -1,0 +1,11 @@
+<div class="pair"
+*ngFor="let marketRef of exchangeSnapshot?.marketRefs | slice:page*itemsPerPage:(page+1)*itemsPerPage"
+(click)="toggleCollecting(exchangeSnapshot.name, marketRef.symbol)">
+    <app-progress-bar [id]="marketRef.key"
+    [empty]   ="backtestDataCompletion[marketRef.key]?.completeDays <= 1"
+    [loading] ="backtestDataCompletion[marketRef.key] == null"
+    [working] ="backtestDataCompletion[marketRef.key]?.collecting"
+    [progress]="backtestDataCompletion[marketRef.key]?.ratio">
+        <app-pair [symbol]="marketRef.symbol"></app-pair>
+    </app-progress-bar>
+</div>
