@@ -85,29 +85,7 @@ import { Monokai } from "./components/strategies/strategies.theme";
                 fontSize: "16px",
                 minimap: { enabled: false }
             },
-            onMonacoLoad: () => {
-                let _monaco = (window as any).monaco;
-                let defaults = _monaco.languages.typescript.javascriptDefaults;
-
-                setTimeout(() => {
-                    _monaco.editor.defineTheme("monokai", Monokai);
-                    _monaco.editor.setTheme("monokai");
-
-                    window.addEventListener("resize", () => _monaco.editor.setTheme("monokai"));
-                });
-
-                _monaco.languages.registerCompletionItemProvider("typescript", {
-                    provideCompletionItems: (model, position) => ({ items: completions })
-                });
-
-                defaults.setCompilerOptions({
-                    noLib: true,
-                    allowNonTsExtensions: true
-                });
-
-                defaults.addExtraLib(lib_es5_d_ts, "lib.es6.d.ts");
-            }
-        })
+            onMonacoLoad: onMonacoLoad })
     ],
     providers: [
         SignalRService,
@@ -120,3 +98,26 @@ import { Monokai } from "./components/strategies/strategies.theme";
     bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+export function onMonacoLoad() {
+    let _monaco = (window as any).monaco;
+    let defaults = _monaco.languages.typescript.javascriptDefaults;
+
+    setTimeout(() => {
+        _monaco.editor.defineTheme("monokai", Monokai);
+        _monaco.editor.setTheme("monokai");
+
+        window.addEventListener("resize", () => _monaco.editor.setTheme("monokai"));
+    });
+
+    _monaco.languages.registerCompletionItemProvider("typescript", {
+        provideCompletionItems: (model, position) => ({ items: completions })
+    });
+
+    defaults.setCompilerOptions({
+        noLib: true,
+        allowNonTsExtensions: true
+    });
+
+    defaults.addExtraLib(lib_es5_d_ts, "lib.es6.d.ts");
+}
