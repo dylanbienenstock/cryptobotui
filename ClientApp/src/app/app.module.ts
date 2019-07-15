@@ -85,7 +85,8 @@ import { Monokai } from "./components/strategies/strategies.theme";
                 fontSize: "16px",
                 minimap: { enabled: false }
             },
-            onMonacoLoad: onMonacoLoad })
+            onMonacoLoad: onMonacoLoad 
+        })
     ],
     providers: [
         SignalRService,
