@@ -22,7 +22,7 @@ export class StrategiesComponent implements AfterViewInit {
     constructor(private _interface: InterfaceService,
                 private scale: ScaleService) { }
 
-    @ViewChild("output") outputRef: ElementRef;
+    @ViewChild("output", { static: false }) outputRef: ElementRef;
     public get output(): HTMLElement { return this.outputRef.nativeElement; }
 
     @HostBinding("style.grid-template-rows")

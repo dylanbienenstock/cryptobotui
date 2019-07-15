@@ -29,7 +29,7 @@ export class OrderbookComponent implements OnInit, OnDestroy {
         this.orderbook.setMarketRef(val.exchangeName, val.symbol);
     }
 
-    @ViewChild("container") containerRef: ElementRef;
+    @ViewChild("container", { static: true }) containerRef: ElementRef;
     private get container(): HTMLElement {
         return this.containerRef.nativeElement;
     }

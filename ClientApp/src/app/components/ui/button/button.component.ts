@@ -30,7 +30,7 @@ export class ButtonComponent implements AfterViewInit {
     @HostBinding("style.width.px")
     public width: number;
 
-    @ViewChild("menu") menuRef: ElementRef;
+    @ViewChild("menu", { static: false }) menuRef: ElementRef;
     public get menu(): HTMLElement {
         return this.menuRef.nativeElement;
     }

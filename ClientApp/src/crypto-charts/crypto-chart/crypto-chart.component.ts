@@ -45,13 +45,13 @@ export class CryptoChartComponent implements AfterViewInit {
         return false;
     }
 
-    @ViewChild("chart")
+    @ViewChild("chart", { static: true })
     public chartRef: ElementRef;
     public get chart(): HTMLCanvasElement {
         return this.chartRef.nativeElement;
     }
 
-    @ViewChild("scale")
+    @ViewChild("scale", { static: true })
     public scaleRef: ElementRef;
     public get scale(): HTMLCanvasElement {
         return this.scaleRef.nativeElement;
