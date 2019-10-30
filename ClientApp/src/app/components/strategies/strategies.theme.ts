@@ -7,32 +7,28 @@ export const Monokai = {
             "token": "comment"
         },
         {
+            "foreground": "86db86",
+            "token": "type.identifier"
+        },
+        {
             "foreground": "888888",
             "token": "delimiter"
         },
         {
-            "foreground": "86db86",
+            "foreground": "e6e882",
             "token": "string"
         },
         {
-            "foreground": "86db86",
+            "foreground": "CCCCCC",
+            "token": "string.key.json"
+        },
+        {
+            "foreground": "e6e882",
+            "token": "string.value.json"
+        },
+        {
+            "foreground": "54B6C8",
             "token": "number"
-        },
-        {
-            "foreground": "86db86",
-            "token": "constant.numeric"
-        },
-        {
-            "foreground": "86db86",
-            "token": "constant.language"
-        },
-        {
-            "foreground": "86db86",
-            "token": "constant.character"
-        },
-        {
-            "foreground": "86db86",
-            "token": "constant.other"
         },
         {
             "foreground": "fe4c4c",
@@ -40,103 +36,16 @@ export const Monokai = {
         },
         {
             "foreground": "fe4c4c",
-            "token": "storage"
-        },
-        {
-            "foreground": "66d9ef",
-            "fontStyle": "italic",
-            "token": "storage.type"
-        },
-        {
-            "foreground": "a6e22e",
-            "fontStyle": "underline",
-            "token": "entity.name.class"
-        },
-        {
-            "foreground": "a6e22e",
-            "fontStyle": "italic underline",
-            "token": "entity.other.inherited-class"
-        },
-        {
-            "foreground": "a6e22e",
-            "token": "entity.name.function"
-        },
-        {
-            "foreground": "fd971f",
-            "fontStyle": "italic",
-            "token": "variable.parameter"
-        },
-        {
-            "foreground": "f92672",
-            "token": "entity.name.tag"
-        },
-        {
-            "foreground": "a6e22e",
-            "token": "entity.other.attribute-name"
-        },
-        {
-            "foreground": "66d9ef",
-            "token": "support.function"
-        },
-        {
-            "foreground": "66d9ef",
-            "token": "support.constant"
-        },
-        {
-            "foreground": "66d9ef",
-            "fontStyle": "italic",
-            "token": "support.type"
-        },
-        {
-            "foreground": "66d9ef",
-            "fontStyle": "italic",
-            "token": "support.class"
+            "token": "keyword.json"
         },
         {
             "foreground": "f8f8f0",
             "background": "f92672",
             "token": "invalid"
         },
-        {
-            "foreground": "f8f8f0",
-            "background": "86db86",
-            "token": "invalid.deprecated"
-        },
-        {
-            "foreground": "cfcfc2",
-            "token": "meta.structure.dictionary.json string.quoted.double.json"
-        },
-        {
-            "foreground": "75715e",
-            "token": "meta.diff"
-        },
-        {
-            "foreground": "75715e",
-            "token": "meta.diff.header"
-        },
-        {
-            "foreground": "f92672",
-            "token": "markup.deleted"
-        },
-        {
-            "foreground": "a6e22e",
-            "token": "markup.inserted"
-        },
-        {
-            "foreground": "e6db74",
-            "token": "markup.changed"
-        },
-        {
-            "foreground": "86db86",
-            "token": "constant.numeric.line-number.find-in-files - match"
-        },
-        {
-            "foreground": "e6db74",
-            "token": "entity.name.filename.find-in-files"
-        }
     ],
     "colors": {
-        "editor.foreground": "#F8F8F2",
+        "editor.foreground": "#CCCCCC",
         "editor.background": "#2D2D2D",
         "editor.selectionBackground": "#49483E",
         "editor.lineHighlightBackground": "#333333",

@@ -3,6 +3,7 @@
 
 @import url("https://fonts.googleapis.com/css?family=Roboto:300,400");
 @import "cryptofont/cryptofont";
+@import "xterm/xterm";
 
 @font-face {
     font-family: "Iosevka";
@@ -45,12 +46,10 @@ body {
     width: 10px;
 }
 
-/* Track */
 ::-webkit-scrollbar-track {
     background: $background-light;
 }
 
-/* Handle */
 ::-webkit-scrollbar-thumb {
     background: $button-background-hover;
 }

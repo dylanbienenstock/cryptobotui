@@ -1,6 +1,9 @@
 @import "variables";
 @import "mixins";
 @import "functions";
+@import "xterm/xterm";
+
+$drop-background: lighten(black, 33%);
 
 :host {
     height: $usable-height;
@@ -8,29 +11,121 @@
     display: grid;
     grid-gap: 4px;
     overflow: hidden;
-    // grid-template-rows: auto 288px;
-    // grid-template-columns: scale(256px) auto;
-    // grid-template-areas: 
-    //     "files editor"
-    //     "files output";
+
+    .delete-file-dialog-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 666;
+
+        background: rgba(black, 0.6);
+
+        .delete-file-dialog {
+            $dialog-scale: 1.2;
+
+            display: inline-block;
+            position: relative;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+            text-align: center;
+            color: $color;
+            text-shadow: 0 0 8px black;
+
+            .prompt {
+                font-size: 3vmin * $dialog-scale;
+                margin-bottom: 1vmin * $dialog-scale;
+            }
+
+            .subprompt {
+                font-size: 2.5vmin * $dialog-scale;
+                margin-bottom: 4vmin * $dialog-scale;
+            }
+
+            .options {
+                .cancel, .delete {
+                    cursor: pointer;
+                    display: inline-block;
+                    height: 5vmin * $dialog-scale;
+                    line-height: 5vmin * $dialog-scale;
+                    padding: 0 2vmin * $dialog-scale;
+                    font-size: 3vmin * $dialog-scale;
+
+                    opacity: 0.5;
+                    
+                    @include desktop {
+                        &:hover {
+                            opacity: 1;
+                        }
+
+                        &:active {
+                            transform: scale3d(0.9, 0.9, 0.9);
+                        }
+                    }
+                }
+
+                .cancel {
+                    margin-right: 2.5vmin * $dialog-scale;
+                }
+
+                .delete {
+                    margin-left: 2.5vmin * $dialog-scale;
+                    color: $color-bearish;
+                }
+            }
+        }
+    }
 
     .file-list-container {
         grid-area: files;
+
+        display: flex;
+        flex-flow: column nowrap;
         background: $background-medium;
         font-size: 14px;
 
         .file-list {
+            &:last-child {
+                flex: 1;
+            }
+
+            @include desktop {
+                &:hover {
+                    .button-container {
+                        .button {
+                            opacity: 1 !important;
+
+                            &.disabled {
+                                opacity: 0.5 !important;
+                            }
+                        }
+                    }
+                }
+            }
+
             .file {
+                position: relative;
                 cursor: pointer;
 
                 display: flex;
                 flex-flow: row nowrap;
-                height: scale(22px);
-                line-height: scale(22px);
+                height: scale(28px);
+                line-height: scale(28px);
                 font-size: scale(14px);
 
                 &.selected {
                     background: lighten($background-light, 1%) !important;
+                }
+
+                &.has-problems {
+                    color: $color-bearish !important;
+
+                    .icon.file path {
+                        fill: $color-bearish;
+                    }
                 }
 
                 &.root {
@@ -39,31 +134,43 @@
                     font-weight: bold;
                     padding-left: 8px;
                     background: lighten($background-light, 2%) !important;
+
+                    .text {
+                        transform: translateY(0.5px);
+                    }
                 }
 
                 @include desktop {
                     &:hover {
-                        background: $background-light;
+                        background: $list-item-background-hover;
                     }
 
                     &:active {
-                        background: lighten($background-light, 4%);
+                        background: $list-item-background-active;
                     }
                 }
 
-                img {
-                    width: scale(6px);
-                    height: 100%;
-                    margin-right: scale(12px);
-
+                .icon {
                     pointer-events: none;
 
-                    &.visible {
-                        transform: rotate(90deg);
+                    &.directory {
+                        width: scale(6px);
+                        height: 100%;
+                        margin-right: scale(12px);
+
+                        &.visible {
+                            transform: rotate(90deg);
+                        }
                     }
 
-                    &.file-type {
+                    &.file {
                         width: scale(9px);
+                        margin-right: scale(8px);
+                        margin-left: scale(4px);
+                    }
+
+                    &.tool {
+                        width: scale(12px);
                         margin-right: scale(8px);
                         margin-left: scale(4px);
                     }
@@ -72,85 +179,222 @@
                 .text {
                     transform: translateY(1px);
                 }
+
+                .rename-input-container {
+                    flex: 1;
+                    position: relative;
+                    margin-right: 8px;
+                    height: 100%;
+                    
+                    z-index: 1;
+                    
+                    .rename-input {
+                        display: block;
+                        position: relative;
+                        top: 50%;
+                        transform: translateY(-50%);
+
+                        height: 20px;
+                        width: 100%;
+
+                        background: rgba(white, 0.1);
+                        font-family: $font-sans;
+                        color: $color;
+                        
+                        padding: 0 2px;
+                        box-sizing: border-box;
+
+                        border: border(transparent);
+                        outline: 0;
+    
+                        &.error {
+                            border: border($color-bearish);
+                            border-bottom: border(transparent);
+                        }
+                    }
+
+                    .file-exists {
+                        position: absolute;
+                        background: #5d2222;
+                        top: 24px;
+                        width: 100%;
+                        border: border($color-bearish);
+                        box-sizing: border-box;
+                        z-index: 1;
+
+                        font-size: 14px;
+                        line-height: 1.1;
+                        padding: 4px;
+                    }
+                }
+
+                .button-container {
+                    position: absolute;
+                    right: 0;
+
+                    .button {
+                        display: inline-block;
+                        width: 28px;
+                        height: 28px;
+                        opacity: 0;
+
+                        &:hover {
+                            background: $button-background-hover;
+                        }
+    
+                        &:active {
+                            background: $button-background-active;
+                        }
+
+                        img {
+                            width: 14px;
+                            height: 100%;
+                            position: relative;
+                            left: 6.5px;
+                            top: -1px;
+                        }
+                    }
+                }
             }
         }
     }
 
     .editor {
         grid-area: editor;
-        display: flex;
-        flex-flow: column nowrap;
-        background: $background-medium;
-
-        .tab-container {
-            height: scale(24px);
-            line-height: scale(24px);
-            margin-bottom: 8px;
-
-            .tab {
-                cursor: pointer;
-                display: flex;
-                flex-flow: row nowrap;
-                font-size: scale(14px);
-
-                padding: 0 scale(12px);
-                height: 100%;
-                line-height: scale(24px);
-
-                img {
-                    width: scale(9px);
-                    height: 100%;
-                    margin-right: scale(8px);
-                }
-
-                .text {
-                    transform: translateY(1px);
-                }
-            }
-        }
-
-        ngx-monaco-editor {
-            grid-area: editor;
-            flex: 1;
-    
-            /deep/ .editor-container {
-                height: 100% !important;
-            }
-        }
     }
 
-    .output-container {
+    .bottom-panel-container {
+        position: relative;
         grid-area: output;
-        display: flex;
-        flex-flow: column nowrap;
         background: $background-medium;
-        overflow: hidden;
+        // overflow: hidden;
 
-        .option-container {
-            display: flex;
-            background: lighten($background-light, 2%);
-            height: scale(32px);
-            line-height: scale(32px);
+        .bottom-panel-resize-handle {
+            cursor: ns-resize;
+            position: absolute;
+            width: 100%;
+            height: 10px;
+            top: -10px;
+            z-index: 1;
 
-            .option {
-                cursor: pointer;
-                padding: 0 scale(12px);
-                font-size: scale(14px);
+            div {
+                &:first-child {
+                    height: 6px;
+                }
 
-                @include desktop {
-                    &:hover {
-                        background: $button-background-hover;
+                &:last-child {
+                    height: 4px;
+                }
+            }
+            
+            @include desktop {
+                &:hover {
+                    div:first-child {
+                        background: rgba(#CCCCCC, 0.1);
                     }
-
-                    &:active {
-                        background: $button-background-active;
+                    div:last-child {
+                        background: #CCCCCC;
+                    }
+                }
+                &:active {
+                    div:first-child {
+                        background: rgba(#CCCCCC, 0.05);
+                    }
+                    div:last-child {
+                        background: rgba(#CCCCCC, 0.5);
                     }
                 }
             }
         }
 
-        .output {
-            flex: 1;
+        .bottom-panel-container-inner {
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+
+            display: flex;
+            flex-flow: column nowrap;
+
+            .option-container {
+                display: flex;
+                background: lighten($background-light, 2%);
+                height: scale(32px);
+                line-height: scale(32px);
+
+                .option {
+                    cursor: pointer;
+                    padding: 0 scale(12px);
+                    font-size: scale(14px);
+
+                    &:not(.active) {
+                        opacity: 0.6;
+                    }
+
+                    @include desktop {
+                        &:hover {
+                            background: $button-background-hover;
+                        }
+
+                        &:active {
+                            background: $button-background-active;
+                        }
+                    }
+                }
+            }
+
+            .bottom-panel {
+                flex: 1;
+                overflow: hidden;
+                position: relative;
+                
+                > .hidden {
+                    opacity: 0;
+                    pointer-events: none;
+                }
+
+                .problem-container {
+                    overflow-y: auto;
+                    
+                    .problem {
+                        cursor: pointer;
+                        padding: 8px;
+
+                        @include desktop {
+                            &:hover {
+                                background: $background-light;
+                            }
+        
+                            &:active {
+                                background: lighten($background-light, 4%);
+                            }
+                        }
+
+                        .text {
+                            line-height: 16px;
+
+                            .icon {
+                                float: left;
+                                height: 16px;
+                                width: 12px;
+                                margin-right: 8px;
+                                position: relative;
+                                top: -1px;
+                            }
+
+                            .location {
+                                opacity: 0.6;
+                            }
+                        }
+                    }
+                }
+
+                app-console {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                }
+            }
         }
     }
 }

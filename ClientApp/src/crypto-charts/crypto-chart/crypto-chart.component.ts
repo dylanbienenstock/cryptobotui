@@ -211,7 +211,7 @@ export class CryptoChartComponent implements AfterViewInit {
 
         this.scaleRenderer.render();
     }
-    flash = false;
+
     private renderChart(): void {
         if (this.state.reset) {
             this.onResetScaleY();
@@ -272,12 +272,6 @@ export class CryptoChartComponent implements AfterViewInit {
 
                 this.changeDetector.detectChanges();
 
-                if (this.flash) {
-                    this.chartCtx.fillStyle = "yellow";
-                    this.chartCtx.fillRect(10, 10, 20, 20);
-                }
-
-                this.flash = !this.flash;
                 this.indicators.forEach(ind => ind.changed = false);
             }
         } catch (err) {

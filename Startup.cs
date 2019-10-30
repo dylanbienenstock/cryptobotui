@@ -1,15 +1,16 @@
 using System;
-using System.Collections.Generic;
-using System.Threading;
+using System.IO;
 using CryptoBotUI.Hubs;
+using CryptoBotUI.Models;
 using CryptoBotUI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace CryptoBotUI
 {
@@ -39,6 +40,16 @@ namespace CryptoBotUI
 
             services.AddSignalR();
 
+            services.AddDbContext<StrategyContext>(options =>
+            {
+                var dbPath = Path.Join(Environment.CurrentDirectory, "..");
+                var dbFile = Path.Join(dbPath, "Strategies.db");
+
+                options.UseSqlite($"Data Source={dbFile}");
+                // options.EnableSensitiveDataLogging();
+                // options.EnableDetailedErrors();
+            });
+
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -46,6 +57,16 @@ namespace CryptoBotUI
             });
 
             services.AddSingleton<ExchangeNetworkService>();
+            services.AddScoped<StrategyService>();
+           
+           services.Configure<JsonHubProtocolOptions>(options =>
+            {
+                options.PayloadSerializerSettings = new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -107,6 +128,7 @@ namespace CryptoBotUI
             //     .GetRequiredService(typeof(ExchangeNetworkService));
 
             // exchangeNetworkService.Connect().GetAwaiter().GetResult();
+            
         }
     }
 }

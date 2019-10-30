@@ -9,13 +9,13 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="12"
+   width="16"
    height="16"
-   viewBox="0 0 3.1749999 4.2333335"
+   viewBox="0 0 4.233333 4.2333335"
    version="1.1"
    id="svg8"
    inkscape:version="0.92.1 r15371"
-   sodipodi:docname="ts.svg">
+   sodipodi:docname="backtest.svg">
   <defs
      id="defs2" />
   <sodipodi:namedview
@@ -26,8 +26,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="31.678384"
-     inkscape:cx="9.4970498"
-     inkscape:cy="2.8514604"
+     inkscape:cx="2.1562965"
+     inkscape:cy="3.1298593"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -38,16 +38,21 @@
      inkscape:window-x="0"
      inkscape:window-y="56"
      inkscape:window-maximized="1"
-     inkscape:snap-global="true"
+     inkscape:snap-global="false"
      inkscape:snap-nodes="true"
      inkscape:snap-bbox="true"
-     inkscape:bbox-nodes="true">
+     inkscape:bbox-nodes="true"
+     showguides="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0">
     <inkscape:grid
        type="xygrid"
        id="grid4485"
        empspacing="4"
        originx="0"
-       originy="-3.3333335e-06" />
+       originy="0" />
   </sodipodi:namedview>
   <metadata
      id="metadata5">
@@ -65,16 +70,17 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-292.76665)">
+     transform="translate(-3.0901403e-6,-292.50208)">
     <path
-       style="fill:none;stroke:#cccccc;stroke-width:0.39687499;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 0.1984375,293.09738 v 3.43958 h 2.6458333 v -2.38125 l -1.0583333,-1.05833 z"
-       id="path4823"
-       inkscape:connector-curvature="0" />
+       style="opacity:1;fill:#cccccc;fill-opacity:1;stroke:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+       d="M 8 0 A 7.9999995 7.9999995 0 0 0 0 8 A 7.9999995 7.9999995 0 0 0 8 16 A 7.9999995 7.9999995 0 0 0 16 8 A 7.9999995 7.9999995 0 0 0 8 0 z M 8 1.5058594 A 6.4949235 6.4949235 0 0 1 14.494141 8 A 6.4949235 6.4949235 0 0 1 8 14.494141 A 6.4949235 6.4949235 0 0 1 1.5058594 8 A 6.4949235 6.4949235 0 0 1 8 1.5058594 z "
+       transform="matrix(0.26458333,0,0,0.26458333,3.0901403e-6,292.50208)"
+       id="path5294" />
     <path
-       style="fill:none;stroke:#cccccc;stroke-width:0.39687499;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 1.5875,293.03123 v 1.32292 h 1.3229166"
-       id="path4829"
-       inkscape:connector-curvature="0" />
+       style="fill:#cccccc;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
+       d="m 2.5442665,293.56041 v 2.11667 l -1.3229166,-1.05833 z"
+       id="path5306"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccc" />
   </g>
 </svg>

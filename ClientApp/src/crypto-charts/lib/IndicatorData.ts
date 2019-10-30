@@ -1,20 +1,20 @@
 import { TimeSeriesEntry, TimeSeries } from "./TimeSeries";
 import { Range } from "./Range";
 import { TimeWindow } from "./TimeWindow";
-import { IndicatorDataAggregate } from "./IndicatorDataAggregate";
+// import { IndicatorDataAggregate } from "./IndicatorDataAggregate";
 
 export class IndicatorData {
     public fieldName: string;
     public values: { [time: number]: number };
     public lastValue: number;
     public endTime: number = 0;
-    public dataAggregate: IndicatorDataAggregate;
+    public dataAggregate;
 
     public get timeFrame(): number {
         return this.dataAggregate.timeFrame;
     }
 
-    constructor(fieldName: string, dataAggregate: IndicatorDataAggregate) {
+    constructor(fieldName: string, dataAggregate) {
         this.fieldName = fieldName;
         this.dataAggregate = dataAggregate;
         this.values = [];

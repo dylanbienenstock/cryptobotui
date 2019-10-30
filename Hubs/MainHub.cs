@@ -15,18 +15,25 @@ using CryptoBot.Indicators;
 using System.Collections.Generic;
 using System.Threading;
 using CryptoBot.Exchanges.Orders;
+using CryptoBotUI.Models;
+using CryptoBot.Scripting;
+using CryptoBot.Scripting.Typings;
+using System.IO;
+using CryptoBot.Scripting.Modules;
 
 namespace CryptoBotUI.Hubs
 {
     public class MainHub : Hub
     {
         private ExchangeNetworkService _exchangeNetworkService;
-        private ExchangeNetwork _network => _exchangeNetworkService.Network;
-        private TimeSpan _bufferTime = TimeSpan.FromMilliseconds(500);
+        private StrategyService        _strategyService;
+        private ExchangeNetwork        _network => _exchangeNetworkService.Network;
+        private TimeSpan               _bufferTime = TimeSpan.FromMilliseconds(500);
 
-        public MainHub(ExchangeNetworkService exchangeNetworkService)
+        public MainHub(ExchangeNetworkService exchangeNetworkService, StrategyService strategyService)
         {
             _exchangeNetworkService = exchangeNetworkService;
+            _strategyService = strategyService;
         }
 
         public static class Data
@@ -246,8 +253,6 @@ namespace CryptoBotUI.Hubs
 
         public ChannelReader<IndicatorChange> SubscribeToIndicator(IndicatorReference indicatorRef, CancellationToken token)
         {
-            Console.WriteLine("Got request for indicator: " + Newtonsoft.Json.JsonConvert.SerializeObject(indicatorRef, Newtonsoft.Json.Formatting.Indented));
-
             var stream = Channel.CreateUnbounded<IndicatorChange>();
 
             Task.Run(async () =>
@@ -514,6 +519,79 @@ namespace CryptoBotUI.Hubs
             });
 
             return stream.Reader;
+        }
+
+        public async Task<HubResponse<List<DirectoryNodeModel>>> GetFileSystemStructure()
+        {
+            var fileSystem = await _strategyService.GetFileSystemStructure();
+            return new SuccessResponse<List<DirectoryNodeModel>>(fileSystem);
+        }
+
+        public async Task<HubResponse> CreateFile(CreateFileModel model)
+        {
+            try { await _strategyService.CreateFile(model); }
+            catch (Exception ex) { return new FailureResponse(ex.Message); }
+            return new SuccessResponse();
+        }
+
+        public async Task<HubResponse<FileNodeModel>> ReadFile(string fileName)
+        {
+            FileNodeModel model = null;
+            try { model = await _strategyService.GetFile(fileName); }
+            catch (Exception ex) { return new FailureResponse<FileNodeModel>(ex.Message); }
+            return new SuccessResponse<FileNodeModel>(model);
+        }
+
+        public async Task<HubResponse> UpdateFile(UpdateFileModel model)
+        {
+            try { await _strategyService.UpdateFile(model); }
+            catch (Exception ex) { return new FailureResponse(ex.Message); }
+            return new SuccessResponse();
+        }
+
+        public HubResponse DeleteFile(string fileName)
+        {
+            try { _strategyService.DeleteFile(fileName); }
+            catch (Exception ex) { return new FailureResponse(ex.Message); }
+            return new SuccessResponse();
+        }
+
+       public async Task<HubResponse> RenameFile(RenameFileNodeModel model)
+        {
+            try { await _strategyService.RenameFile(model); }
+            catch (Exception ex) { return new FailureResponse(ex.Message); }
+            return new SuccessResponse();
+        }
+
+        public async Task<HubResponse<string>> GetTypescriptDefinitions()
+        {
+            var definitions = await TypescriptDefinitions.GetLibrary();
+            return new SuccessResponse<string>(definitions);
+        }
+
+        public async Task<HubResponse<object>> GetModuleSchema(string fileName)
+        {
+            try
+            {
+                var file = await _strategyService.GetFile(fileName);
+                var inputs = await ScriptManager.GetRequiredInputs<SignalEmitter>(file.Content);
+                return new SuccessResponse<object>(inputs.ToJsonSchema());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.GetType().Name);
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.InnerException);
+                Console.WriteLine(ex.StackTrace);
+                return new FailureResponse<object>(ex.Message);
+            }
+        }
+
+        public HubResponse ExecuteScript(string fileName)
+        {
+            try { _strategyService.ExecuteScript(fileName); }
+            catch (Exception ex) { return new FailureResponse(ex.Message); }
+            return new SuccessResponse();
         }
     }
 }

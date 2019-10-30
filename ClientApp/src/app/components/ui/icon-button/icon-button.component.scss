@@ -14,7 +14,6 @@
     outline: 0;
 
     &.active {
-        background: $button-background-active;
     }
 
     @include desktop {
@@ -28,12 +27,19 @@
             .icon {
                 filter: brightness(100%);
             }
+            background: $list-item-background-active;
+
         }
 
         &:active, &.active {
             .icon {
                 filter: brightness(130%) !important;
-            }  
+            }
+        }
+
+        &:active {
+            background: lighten($list-item-background-hover, 1%) !important;
+
         }
     }
 

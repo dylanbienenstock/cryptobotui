@@ -1,44 +1,174 @@
+<div class="delete-file-dialog-container"
+*ngIf="deleteFilePromiseResolver">
+    <div class="delete-file-dialog">
+        <div class="prompt">Are you sure you want to delete '{{strategies.selectedNode.name}}'?</div>
+        <div class="subprompt">This action is cannot be undone.</div>
+        <div class="options">
+            <div class="cancel" (click)="deleteFilePromiseResolver(false)">Cancel</div>
+            <div class="delete" (click)="deleteFilePromiseResolver(true)">Delete</div>
+        </div>
+    </div>
+</div>
+
 <div class="file-list-container" *ngIf="showFiles">
     <div class="file-list">
-        <ng-template #fileNodeView let-fileNode="fileNode" let-depth="depth">
+        <ng-template #nodeView
+        let-rootName="rootName"
+        let-node="node"
+        let-depth="depth"
+        let-isDirectory="isDirectory"
+        let-isTool="isTool">
             <div class="file" 
-            [class.root]="fileNode.root"
-            [class.selected]="selectedFileNode == fileNode"
+            [class.root]="node.root"
+            [class.selected]="strategies.selectedNode == node && rootName == strategies.selectedNodeRootName"
+            [class.has-problems]="node.problems && node.problems.length > 0"
             [style.padding-left.px]="8 + depth * 16"
-            (click)="onClickFileNode(fileNode)">
-                <img [class.visible]="fileNode.children && fileNode.visible" 
-                [class.file-type]="!fileNode.children"
-                [src]="fileNode.children ? 'assets/ui/triangle.svg' : 'assets/ui/ts.svg'">
-                <span class="text">{{fileNode.name}}</span>
+            (mousedown)="!isDirectory ? onTabMouseDown(node, true) : null"
+            (click)="$event.stopPropagation(); onClickNode(node, isDirectory, rootName);">
+                <ng-container *ngIf="isDirectory; else fileIcon">
+                    <img class="icon directory" [class.visible]="node.visible !== false" src="assets/ui/triangle.svg">
+                </ng-container>
+                <ng-template #fileIcon >
+                    <svg class="icon file" *ngIf="!isTool; else toolIcon" xmlns="http://www.w3.org/2000/svg" width="12" height="16" viewBox="0 0 3.175 4.23333"><path style="line-height:normal;font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-feature-settings:normal;text-indent:0;text-align:start;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000;text-transform:none;text-orientation:mixed;isolation:auto;mix-blend-mode:normal" d="M0 .13177V3.96978h3.04323V1.30741L1.86707.13177H0zm.39636.39636h.99219v1.2578h1.2578v1.78543h-2.25V.52813zM1.7849.60978l.77928.7798H1.7849v-.7798z" color="#000" font-weight="400" font-family="sans-serif" white-space="normal" overflow="visible" fill="#ccc"/></svg>
+                    <ng-template #toolIcon>
+                        <img class="icon tool" [src]="'assets/ui/' + node.icon + '.svg'">
+                    </ng-template>
+                </ng-template>
+
+                <span class="text" *ngIf="isDirectory || 
+                    (strategies.selectedNode != node || 
+                    !(renamingSelectedNode && rootName == strategies.selectedNodeRootName)); 
+                    else renameInputTemplate;">
+                        {{node.name}}
+                </span>
+
+                <ng-template #renameInputTemplate>
+                    <div class="rename-input-container">
+                        <div class="file-exists" *ngIf="fileAlreadyExists">
+                            A file with the specified name already exists.
+                        </div>
+                        <div class="file-exists" *ngIf="!fileAlreadyExists && incorrectFileExtension">
+                            Files in this directory must be of extension '.{{requiredFileExtension}}'
+                        </div>
+                        <input class="rename-input" type="text" #renameInput
+                        [class.error]="fileAlreadyExists"
+                        [(ngModel)]="node.name" (ngModelChange)="onNewFileNameChanged()"
+                        (blur)="onFinishRenamingFile()" (keydown.Enter)="renameInput.blur()">
+                    </div>
+                </ng-template>
+                
+                <div class="button-container" *ngIf="node.buttons"
+                (click)="$event.stopPropagation()">
+                    <div class="button" [class.disabled]="!strategies.selectedNodeIsDirectory && !strategies.selectedNodeParentDirectory"
+                    (click)="onCreateNewFile()">
+                        <img src="assets/ui/new-file.svg">
+                    </div>
+                    <!-- <div class="button" [class.disabled]="!strategies.selectedNodeIsDirectory">
+                        <img src="assets/ui/new-folder.svg">
+                    </div> -->
+                    <div class="button">
+                        <img src="assets/ui/collapse-all.svg">
+                    </div>
+                    <div class="button">
+                        <img src="assets/ui/refresh.svg">
+                    </div>
+                </div>
             </div>
-            <ng-container *ngIf="fileNode.visible">
-                <ng-container *ngFor="let childNode of fileNode.children">
-                    <ng-container *ngTemplateOutlet="fileNodeView; context: { fileNode: childNode, depth: depth + 1 }"></ng-container>
+
+            <ng-container *ngIf="isDirectory && node.visible !== false">
+                <ng-container *ngFor="let childNode of node.directories || []">
+                    <ng-container *ngTemplateOutlet="nodeView; context: {
+                        rootName: rootName,
+                        node: childNode,
+                        depth: depth + 1,
+                        isDirectory: true,
+                        isTool: isTool
+                    }"></ng-container>
+                </ng-container>
+                <ng-container *ngFor="let childNode of node.files || []">
+                    <ng-container *ngTemplateOutlet="nodeView; context: {
+                        rootName: rootName,
+                        node: childNode,
+                        depth: depth + 1,
+                        isTool: isTool
+                    }"></ng-container>
                 </ng-container>
             </ng-container>
         </ng-template>
 
-        <ng-container *ngTemplateOutlet="fileNodeView; context: { fileNode: openEditorsRoot, depth: 0 }"></ng-container>
-        <ng-container *ngTemplateOutlet="fileNodeView; context: { fileNode: fileRoot, depth: 0 }"></ng-container>
+        <ng-container *ngTemplateOutlet="nodeView; context: {
+            rootName: strategies.openFilesRoot.name,
+            node: strategies.openFilesRoot,
+            depth: 0,
+            isDirectory: true
+        }"></ng-container>
+    </div>
+    <div class="file-list">
+        <ng-container *ngTemplateOutlet="nodeView; context: {
+            rootName: strategies.fileSystemRoot.name,
+            node: strategies.fileSystemRoot,
+            depth: 0,
+            isDirectory: true
+        }"></ng-container>
+    </div>
+    <div class="file-list">
+        <ng-container *ngTemplateOutlet="nodeView; context: {
+            rootName: strategies.toolsRoot.name,
+            node: strategies.toolsRoot,
+            depth: 0,
+            isDirectory: true,
+            isTool: true
+        }"></ng-container>
     </div>
 </div>
 
 <div class="editor">
-    <div class="tab-container">
-        <div class="tab">
-            <img src="assets/ui/ts.svg">
-            <span class="text">Untitled</span>
-        </div>
-    </div>
-    <ngx-monaco-editor [options]="editorOptions" [(ngModel)]="code"></ngx-monaco-editor>
+    <app-code-editor
+    [draggingFileNode]="draggingFileNode"
+    [dragConfirmed]="dragConfirmed"
+    [cursor]="cursor"
+    [changingActiveFileNode]="changingActiveFileNode"
+    (tabMouseDown)="onTabMouseDown($event)"
+    (tabMouseUp)="onTabMouseUp($event)">
+    </app-code-editor>
 </div>
 
-<div class="output-container" *ngIf="showOutput">
-    <div class="option-container">
-        <div class="option">Problems</div>
-        <div class="option">Output</div>
-        <div class="option">Terminal</div>
-    </div>
+<div class="bottom-panel-container" [hidden]="!showOutput">
+    <div class="bottom-panel-resize-handle" (mousedown)="onResizeHandleMouseDown('bottom-panel')"><div></div><div></div></div>
+    <div class="bottom-panel-container-inner"> 
+        <div class="option-container">
+            <div class="option"
+            [class.active]="bottomPanelMode == 'problems'"
+            (click)="onChangeBottomPanelMode('problems')">
+                Problems
+            </div>
+            <div class="option"
+            [class.active]="bottomPanelMode == 'output'"
+            (click)="onChangeBottomPanelMode('output')">
+                Output
+            </div>
+            <div class="option"
+            [class.active]="bottomPanelMode == 'terminal'"
+            (click)="onChangeBottomPanelMode('terminal')">
+                Terminal
+            </div>
+        </div>
 
-    <div class="output" #output></div>
+        <div class="bottom-panel" #output>
+            <div class="problem-container" [hidden]="bottomPanelMode != 'problems'"
+            *ngIf="strategies?.activeFileNode?.problems">
+                <div class="problem" *ngFor="let problem of strategies.activeFileNode.problems"
+                (click)="onGoToProblem(problem)">
+                    <div class="text">
+                        <img class="icon" src="assets/ui/error.svg">
+                        {{ problem.message }} 
+                        <span class="location">
+                            ({{ strategies.activeFileNode.name }} @ Line {{ problem.startLineNumber }}:{{ problem.startColumn }})
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <app-console #terminal [class.hidden]="bottomPanelMode != 'terminal'"></app-console>
+        </div>
+    </div>
 </div>

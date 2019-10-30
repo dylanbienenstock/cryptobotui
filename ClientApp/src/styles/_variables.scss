@@ -19,6 +19,8 @@ $button-height: 30px;
 $button-font-size: $font-size;
 $button-background-hover: rgba(white, 0.1);
 $button-background-active: rgba(white, 0.13);
+$list-item-background-hover: $background-light;
+$list-item-background-active: lighten($background-light, 4%);
 
 $icon-button-size: 58px;
 $icon-button-icon-size: 24px;

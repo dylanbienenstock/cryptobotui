@@ -4,6 +4,8 @@ import { FormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { RouterModule } from "@angular/router";
 
+import { OrderModule } from "ngx-order-pipe";
+
 import { MonacoEditorModule } from "ngx-monaco-editor";
 import { CryptoChartsModule } from "../crypto-charts/crypto-charts.module";
 
@@ -28,7 +30,6 @@ import { PageControlsComponent } from "./components/ui/page-controls/page-contro
 import { StrategiesComponent } from "./components/strategies/strategies.component";
 import { TabViewComponent } from "./components/ui/tab-view/tab-view.component";
 import { TabContainerComponent } from "./components/ui/tab-container/tab-container.component";
-import { completions } from "./components/strategies/strategies.monaco";
 
 import { lib_es5_d_ts } from "./lib.es5";
 import { ChartComponent } from './components/chart/chart.component';
@@ -42,6 +43,11 @@ import { PairListComponent } from './components/pair-list/pair-list.component';
 import { PriceComponent } from './components/ui/price/price.component';
 import { ScaleService } from "./services/scale.service";
 import { Monokai } from "./components/strategies/strategies.theme";
+import { StrategyService } from "./services/strategy.service";
+import { ConsoleComponent } from './components/console/console.component';
+import { ScriptingService } from "./services/scripting.service";
+import { CodeEditorComponent } from './components/code-editor/code-editor.component';
+import { CreateStrategySchema } from "./components/code-editor/code-editor.schema";
 
 @NgModule({
     declarations: [
@@ -68,7 +74,9 @@ import { Monokai } from "./components/strategies/strategies.theme";
         OrderbookComponent,
         TradesComponent,
         PairListComponent,
-        PriceComponent
+        PriceComponent,
+        ConsoleComponent,
+        CodeEditorComponent
     ],
     imports: [
         // BrowserModule.withServerTransition({ appId: "ng-cli-universal" }),
@@ -86,7 +94,8 @@ import { Monokai } from "./components/strategies/strategies.theme";
                 minimap: { enabled: false }
             },
             onMonacoLoad: onMonacoLoad 
-        })
+        }),
+        OrderModule
     ],
     providers: [
         SignalRService,
@@ -94,7 +103,9 @@ import { Monokai } from "./components/strategies/strategies.theme";
         InterfaceService,
         TradesService,
         OrderbookService,
-        ScaleService
+        ScaleService,
+        StrategyService,
+        ScriptingService,
     ],
     bootstrap: [AppComponent]
 })
@@ -102,7 +113,8 @@ export class AppModule { }
 
 export function onMonacoLoad() {
     let _monaco = (window as any).monaco;
-    let defaults = _monaco.languages.typescript.javascriptDefaults;
+    let ts = _monaco.languages.typescript.typescriptDefaults;
+    let json = _monaco.languages.json.jsonDefaults;
 
     setTimeout(() => {
         _monaco.editor.defineTheme("monokai", Monokai);
@@ -111,14 +123,20 @@ export function onMonacoLoad() {
         window.addEventListener("resize", () => _monaco.editor.setTheme("monokai"));
     });
 
-    _monaco.languages.registerCompletionItemProvider("typescript", {
-        provideCompletionItems: (model, position) => ({ items: completions })
-    });
-
-    defaults.setCompilerOptions({
+    ts.setCompilerOptions({
         noLib: true,
-        allowNonTsExtensions: true
+        allowNonTsExtensions: true,
+        experimentalDecorators: true
     });
 
-    defaults.addExtraLib(lib_es5_d_ts, "lib.es6.d.ts");
+    ts.addExtraLib(lib_es5_d_ts, "lib.es5.d.ts");
+
+    // json.setDiagnosticsOptions({
+    //     validate: true,
+    //     schemas: [{
+    //         uri: "strategy-schema",
+    //         fileMatch: ["*"],
+    //         schema: CreateStrategySchema()
+    //     }]
+    // });
 }
